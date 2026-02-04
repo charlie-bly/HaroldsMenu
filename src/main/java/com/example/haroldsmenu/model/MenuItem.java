@@ -9,8 +9,8 @@ public class MenuItem {
     @NotBlank
     private String id;
 
-    @NotNull @DecimalMin("0.00")
-    private BigDecimal price;
+    @NotNull @Min(0)
+    private double price;
 
     @NotNull
     private boolean available;
@@ -26,7 +26,7 @@ public class MenuItem {
     public String getName() {
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
     }
 
     public boolean isAvailable() {
