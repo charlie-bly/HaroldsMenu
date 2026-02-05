@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,26 +18,31 @@ public class MenuController {
     private final ItemStore store;
 
     public MenuController(ItemStore store) {
+        this.store = store;
     }
 
     @GetMapping("/menu")
     @Tag(name = "User", description = "Actions accessible to all users")
     public List<MenuItem> getMenu() {
+        return new ArrayList<>();
     }
 
     @GetMapping("/menu/{id}")
     @Tag(name = "User", description = "Actions accessible to all users")
     public MenuItem getMenuItem(@PathVariable String id) {
+        return new MenuItem();
     }
 
     @PostMapping("/admin/menu-items")
     @Tag(name = "Admin", description = "Actions accessible only to administrators")
     public MenuItem addItem(@RequestBody MenuItem item) {
+        return new MenuItem();
     }
 
     @PutMapping("/admin/menu-items/{id}")
     @Tag(name = "Admin", description = "Actions accessible only to administrators")
     public MenuItem updateItem(@PathVariable String id, @RequestBody @Valid MenuItem item) {
+        return new MenuItem();
     }
 
     @DeleteMapping("/admin/menu-items/{id}")
@@ -46,6 +53,7 @@ public class MenuController {
     private record Filters(){
     }
 
-    private static boolean matches(MenuItem item, Filters filters) {
+    private boolean matches(MenuItem item, Filters filters) {
+        return true;
     }
 }
