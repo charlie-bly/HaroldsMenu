@@ -32,15 +32,15 @@ public class ItemStore {
         return new MenuItem();
     }
 
-    public MenuItem update(String id, MenuItem patch) {
+    public MenuItem update(String name, MenuItem patch) {
         return new MenuItem();
     }
 
-    public void setAvailability(String id, boolean available) {
+    public void setAvailability(String name, boolean available) {
     }
 
 
-    public void delete(String id) {
+    public void delete(String name) {
     }
 
     private void saveToFile() {

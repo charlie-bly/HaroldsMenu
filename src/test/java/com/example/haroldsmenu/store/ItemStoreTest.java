@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemStoreTest {
@@ -18,9 +17,9 @@ public class ItemStoreTest {
         return tempDir.resolve("test-menu.json");
     }
 
-//    private ItemStore tempStore(Path file) {
-//        return new ItemStore(file.toString());
-//    }
+    private ItemStore tempStore(Path file) {
+        return new ItemStore(file.toString());
+    }
 
     private MenuItem newItem(String name) {
         MenuItem item = new MenuItem();
@@ -33,9 +32,11 @@ public class ItemStoreTest {
     }
 
     // TESTS
+
+    // Currently fails because add() and getAll() have no functionality yet
     @Test
-    public void additionOrderTest() {
-        ItemStore store = new ItemStore(tempFile().toString());
+    void TestAdditionAndGetAll() {
+        ItemStore store = tempStore(tempFile());
         store.add(newItem("Chicken Spice Wrap"));
         store.add(newItem("Double Stack Sandwich"));
 
@@ -50,6 +51,56 @@ public class ItemStoreTest {
     }
 
     @Test
-    void getA() {
+    void TestUpdate() {
+        ItemStore store = tempStore(tempFile());
+        store.add(newItem("Chicken Spice Wrap"));
+
+        store.update("Chicken Spice Wrap,", newItem("Chicken Caesar Wrap"));
+        List<MenuItem> updatedStore = store.getAll();
+
+        assertAll(
+                () -> assertEquals(1,updatedStore.size()),
+                () -> assertEquals("Chicken Caesar Wrap",updatedStore.getFirst().getName())
+        );
+    }
+
+    @Test
+    void TestAvailability() {
+        ItemStore store = tempStore(tempFile());
+        store.add(newItem("Chicken Spice Wrap"));
+
+        store.setAvailability("Chicken Spice Wrap", false);
+        List<MenuItem> updatedStore = store.getAll();
+
+        assertAll(
+                () -> assertEquals(1,updatedStore.size()),
+                () -> assertFalse(updatedStore.getFirst().isAvailable())
+        );
+    }
+
+    @Test
+    void TestDelete() {
+        ItemStore store = tempStore(tempFile());
+        store.add(newItem("Chicken Spice Wrap"));
+
+        store.delete("Chicken Spice Wrap");
+        List<MenuItem> updatedStore = store.getAll();
+        assertEquals(0,updatedStore.size());
+    }
+
+    @Test
+    void TestPersistence() {
+        ItemStore store = tempStore(tempFile());
+        store.add(newItem("Chicken Spice Wrap"));
+
+        // Creating a new store instance, reading from the same file
+        ItemStore newStore = tempStore(tempFile());
+        List<MenuItem> items = newStore.getAll();
+
+        assertAll(
+                () -> assertEquals(1,items.size()),
+                () -> assertEquals("Chicken Spice Wrap",items.getFirst().getName())
+        );
     }
 }
+
