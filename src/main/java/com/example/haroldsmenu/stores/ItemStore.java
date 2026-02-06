@@ -1,21 +1,19 @@
-package com.example.haroldsmenu.store;
+package com.example.haroldsmenu.stores;
 
-import com.example.haroldsmenu.model.MenuItem;
+import com.example.haroldsmenu.models.MenuItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
 @Component
 public class ItemStore {
 
-    private final com.fasterxml.jackson.databind.ObjectMapper mapper = new ObjectMapper()
+    private final ObjectMapper mapper = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT);
-
 
     private final Path file;
     private final ArrayList<MenuItem> items = new ArrayList<MenuItem>();

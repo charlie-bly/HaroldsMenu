@@ -1,13 +1,11 @@
 package com.example.haroldsmenu.controller;
 
-import com.example.haroldsmenu.model.MenuItem;
-import com.example.haroldsmenu.store.ItemStore;
-import io.swagger.v3.oas.annotations.Operation;
+import com.example.haroldsmenu.models.MenuItem;
+import com.example.haroldsmenu.stores.ItemStore;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,27 +25,27 @@ public class MenuController {
         return new ArrayList<>();
     }
 
-    @GetMapping("/menu/{id}")
+    @GetMapping("/menu/{name}")
     @Tag(name = "User", description = "Actions accessible to all users")
-    public MenuItem getMenuItem(@PathVariable String id) {
+    public MenuItem getMenuItem(@PathVariable String name) {
         return new MenuItem();
     }
 
-    @PostMapping("/admin/menu-items")
+    @PostMapping("/admin/menu")
     @Tag(name = "Admin", description = "Actions accessible only to administrators")
     public MenuItem addItem(@RequestBody MenuItem item) {
         return new MenuItem();
     }
 
-    @PutMapping("/admin/menu-items/{id}")
+    @PutMapping("/admin/menu/{name}")
     @Tag(name = "Admin", description = "Actions accessible only to administrators")
-    public MenuItem updateItem(@PathVariable String id, @RequestBody @Valid MenuItem item) {
+    public MenuItem updateItem(@PathVariable String name, @RequestBody @Valid MenuItem item) {
         return new MenuItem();
     }
 
-    @DeleteMapping("/admin/menu-items/{id}")
+    @DeleteMapping("/admin/menu/{name}")
     @Tag(name = "Admin", description = "Actions accessible only to administrators")
-    public void deleteItem(@PathVariable String id) {
+    public void deleteItem(@PathVariable String name) {
     }
 
     private record Filters(){

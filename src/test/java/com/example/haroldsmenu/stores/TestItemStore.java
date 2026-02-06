@@ -1,6 +1,6 @@
-package com.example.haroldsmenu.store;
+package com.example.haroldsmenu.stores;
 
-import com.example.haroldsmenu.model.MenuItem;
+import com.example.haroldsmenu.models.MenuItem;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.io.TempDir;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.*;
 import java.util.List;
 
-public class ItemStoreTest {
+public class TestItemStore {
 
     @TempDir
     Path tempDir;

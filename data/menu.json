@@ -1,0 +1,152 @@
+[
+  {
+    "name": "AM Special",
+    "price": 3.85,
+    "available": true,
+    "times": "morning",
+    "allergens": ["gluten", "sesame"],
+    "vegetarian": true,
+    "vegan": true,
+    "calories": 500
+  },
+  {
+    "name": "Commuter",
+    "price": 1.30,
+    "available": true,
+    "times": "morning",
+    "allergens": ["gluten", "eggs"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 270
+  },
+  {
+    "name": "Veggie Garden",
+    "price": 3.60,
+    "available": true,
+    "times": "lunch",
+    "allergens": ["gluten", "sesame"],
+    "vegetarian": true,
+    "vegan": false,
+    "calories": 420
+  },
+  {
+    "name": "BBQ Chicken",
+    "price": 4.10,
+    "available": true,
+    "times": "lunch",
+    "allergens": ["gluten", "soy", "sesame"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 540
+  },
+  {
+    "name": "Meatball Marinara",
+    "price": 4.20,
+    "available": true,
+    "times": "evening",
+    "allergens": ["gluten", "dairy"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 650
+  },
+  {
+    "name": "Loaded Power Tower",
+    "price": 3.79,
+    "available": true,
+    "times": "evening",
+    "allergens": ["gluten", "dairy", "sesame"],
+    "vegetarian": true,
+    "vegan": false,
+    "calories": 530
+  },
+  {
+    "name": "The Original",
+    "price": 4.99,
+    "available": true,
+    "times": "all",
+    "allergens": ["sesame"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 680
+  },
+  {
+    "name": "Classic Ham",
+    "price": 3.79,
+    "available": true,
+    "times": "all",
+    "allergens": ["gluten", "sesame"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 510
+  },
+  {
+    "name": "Exemplar Bundle",
+    "price": 6.25,
+    "available": true,
+    "times": "all",
+    "allergens": ["gluten", "sesame","dairy"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 1020
+  },
+  {
+    "name": "Italian Combo",
+    "price": 4.95,
+    "available": true,
+    "times": "all",
+    "allergens": ["gluten", "sesame"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 700
+  },
+  {
+    "name": "Chicken Pesto",
+    "price": 4.35,
+    "available": false,
+    "times": "all",
+    "allergens": ["gluten", "dairy", "tree-nuts"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 590
+  },
+  {
+    "name": "Triple Truffle Tower",
+    "price": 4.75,
+    "available": true,
+    "times": "all",
+    "allergens": ["gluten", "dairy", "eggs", "sesame"],
+    "vegetarian": false,
+    "vegan": false,
+    "calories": 560
+  },
+  {
+    "name": "Classic Fries",
+    "price": 2.39,
+    "available": true,
+    "times": "all",
+    "allergens": [],
+    "vegetarian": true,
+    "vegan": true,
+    "calories": 380
+  },
+  {
+    "name": "Cheesy Fries",
+    "price": 3.50,
+    "available": true,
+    "times": "all",
+    "allergens": ["dairy"],
+    "vegetarian": true,
+    "vegan": false,
+    "calories": 620
+  },
+  {
+    "name": "Truffle Fries",
+    "price": 3.95,
+    "available": true,
+    "times": "all",
+    "allergens": ["dairy"],
+    "vegetarian": true,
+    "vegan": false,
+    "calories": 520
+  }
+]
