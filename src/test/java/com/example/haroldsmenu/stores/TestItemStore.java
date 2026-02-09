@@ -41,7 +41,6 @@ public class TestItemStore {
         store.add(newItem("Double Stack Sandwich"));
 
         List<MenuItem> updatedStore = store.getAll();
-        System.out.println(updatedStore);
 
         assertAll(
                 () -> assertEquals(2,updatedStore.size()),

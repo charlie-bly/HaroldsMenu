@@ -16,21 +16,26 @@ public class ItemStore {
             .enable(SerializationFeature.INDENT_OUTPUT);
 
     private final Path file;
-    private final ArrayList<MenuItem> items = new ArrayList<MenuItem>();
+    private final ArrayList<MenuItem> items = new ArrayList<>();
 
     public ItemStore(@Value("${menu.storage.path:./data/menu.json}") String path) {
         this.file = Paths.get(path).toAbsolutePath().normalize();
     }
 
     public List<MenuItem> getAll() {
-        return new ArrayList<>();
+        return new ArrayList<>(items);
     }
 
     public MenuItem add(MenuItem item) {
-        return new MenuItem();
+        items.add(item);
+        saveToFile();
+        return item;
     }
 
     public MenuItem update(String name, MenuItem patch) {
+        for (MenuItem item : items) {
+
+        }
         return new MenuItem();
     }
 
@@ -39,6 +44,10 @@ public class ItemStore {
 
 
     public void delete(String name) {
+    }
+
+    private List<MenuItem> readFromFile() {
+        return new ArrayList<>();
     }
 
     private void saveToFile() {
