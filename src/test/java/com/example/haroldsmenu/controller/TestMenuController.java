@@ -3,6 +3,7 @@ package com.example.haroldsmenu.controller;
 
 import com.example.haroldsmenu.models.MenuItem;
 import com.example.haroldsmenu.stores.ItemStore;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,11 +40,19 @@ public class TestMenuController {
         return item;
     }
 
-    private List<MenuItem> newMenu() {
-        List<MenuItem> menu = new ArrayList<>();
-        menu.add(newItem("Quadruple Haroldburger"));
-        menu.add(newItem("Chicken Spice Wrap"));
-        return menu;
+    private ItemStore newMenu() {
+        ItemStore store = tempStore(tempFile());
+        store.add(newItem("Quadruple Haroldburger"));
+        store.add(newItem("Chicken Spice Wrap"));
+        return store;
+    }
+
+    @BeforeEach
+    void reset() {
+        MenuController controller = new MenuController(tempStore(tempFile()));
+        ItemStore store = tempStore(tempFile());
+
+
     }
 
     @Test
@@ -53,7 +63,15 @@ public class TestMenuController {
         MenuItem item = newItem("Quadruple Haroldburger");
         controller.addItem(item);
 
-        List<MenuItem> menu = controller.getMenu();
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(), // vegetarian
+                Optional.empty(), // vegan
+                Optional.empty(), // includeAllergens
+                Optional.empty(), // excludeAllergens
+                Optional.empty(), // maxPrice
+                Optional.empty(), // maxCalories
+                Optional.empty()  // availableOnly
+        );
 
         assertAll(
                 () -> assertEquals(1, menu.size()),
@@ -75,7 +93,15 @@ public class TestMenuController {
         controller.addItem(item1);
         controller.addItem(item2);
 
-        List<MenuItem> menu = controller.getMenu();
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(), // vegetarian
+                Optional.empty(), // vegan
+                Optional.empty(), // includeAllergens
+                Optional.empty(), // excludeAllergens
+                Optional.empty(), // maxPrice
+                Optional.empty(), // maxCalories
+                Optional.empty()  // availableOnly
+        );
 
         assertAll(
                 () -> assertEquals(2, menu.size()),
@@ -136,7 +162,15 @@ public class TestMenuController {
 
         controller.deleteItem("Quadruple Haroldburger");
 
-        List<MenuItem> menu = controller.getMenu();
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(), // vegetarian
+                Optional.empty(), // vegan
+                Optional.empty(), // includeAllergens
+                Optional.empty(), // excludeAllergens
+                Optional.empty(), // maxPrice
+                Optional.empty(), // maxCalories
+                Optional.empty()  // availableOnly
+        );
 
         assertAll(
                 () -> assertEquals(0, menu.size()),
@@ -158,10 +192,49 @@ public class TestMenuController {
         controller.addItem(item1);
         controller.addItem(item2);
 
-        List<MenuItem> vegetarianMenu = controller.getMenu();
+        //List<MenuItem> vegetarianMenu = controller;
+        List<MenuItem> vegetarianMenu = controller.getMenu(
+                Optional.of(true), // vegetarian
+                Optional.empty(), // vegan
+                Optional.empty(), // includeAllergens
+                Optional.empty(), // excludeAllergens
+                Optional.empty(), // maxPrice
+                Optional.empty(), // maxCalories
+                Optional.empty()  // availableOnly
+        );
+
         assertAll(
                 () -> assertEquals(1, vegetarianMenu.size()),
                 () -> assertEquals("Quadruple Haroldburger", vegetarianMenu.getFirst().getName())
+        );
+    }
+
+    @Test
+    void TestVeganFilter() {
+        ItemStore store = tempStore(tempFile());
+        MenuController controller = new MenuController(store);
+
+        MenuItem item1 = newItem("Quadruple Haroldburger");
+        item1.setVegan(true);
+        MenuItem item2 = newItem("Chicken Spice Wrap");
+        item2.setVegan(false);
+
+        controller.addItem(item1);
+        controller.addItem(item2);
+
+        List<MenuItem> veganMenu = controller.getMenu(
+                Optional.empty(), // vegetarian
+                Optional.of(true), // vegan
+                Optional.empty(), // includeAllergens
+                Optional.empty(), // excludeAllergens
+                Optional.empty(), // maxPrice
+                Optional.empty(), // maxCalories
+                Optional.empty()  // availableOnly
+        );
+
+        assertAll(
+                () -> assertEquals(1, veganMenu.size()),
+                () -> assertEquals("Quadruple Haroldburger", veganMenu.getFirst().getName())
         );
     }
 }

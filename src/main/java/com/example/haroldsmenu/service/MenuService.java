@@ -15,7 +15,7 @@ public class MenuService {
         // if (time.isBefore(LocalTime.NOON)) {
 
         // } else if ((time.equals(LocalTime.NOON) || time.isAfter(LocalTime.NOON))
-        //        && time.isBefore(LocalTime.of(17, 0))) {
+        //        && time.isBefore(LocalTime.of(16, 0))) {
 
         // } else {
         return new ArrayList<>();

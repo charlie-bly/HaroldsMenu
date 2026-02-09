@@ -42,7 +42,6 @@ public class ItemStore {
     public void setAvailability(String name, boolean available) {
     }
 
-
     public void delete(String name) {
     }
 
