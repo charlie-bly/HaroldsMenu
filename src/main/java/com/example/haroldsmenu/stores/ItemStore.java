@@ -32,17 +32,19 @@ public class ItemStore {
         return item;
     }
 
-    public MenuItem update(String name, MenuItem patch) {
+    public MenuItem update(String name, boolean available) {
         for (MenuItem item : items) {
 
         }
         return new MenuItem();
     }
 
-    public void setAvailability(String name, boolean available) {
+    public void delete(String name) {
     }
 
-    public void delete(String name) {
+    public void deleteAll() {
+        items.clear();
+        saveToFile();
     }
 
     private List<MenuItem> readFromFile() {

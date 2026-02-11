@@ -3,13 +3,13 @@ package com.example.haroldsmenu.controller;
 
 import com.example.haroldsmenu.models.MenuItem;
 import com.example.haroldsmenu.stores.ItemStore;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +21,8 @@ public class TestMenuController {
     private boolean addPassed = false;
     private boolean getMenuPassed = false;
     private boolean getMenuItemPassed = false;
+    private ItemStore store;
+    private MenuController controller;
 
     @TempDir
     Path tempDir;
@@ -48,25 +50,24 @@ public class TestMenuController {
     }
 
     @BeforeEach
+    void setup() {
+        controller = new MenuController(tempStore(tempFile()));
+        store = tempStore(tempFile());
+    }
+
+    @AfterEach
     void reset() {
-        MenuController controller = new MenuController(tempStore(tempFile()));
-        ItemStore store = tempStore(tempFile());
-
-
+        tempStore(tempFile()).deleteAll();
     }
 
     @Test
     void TestAddItem() {
-        ItemStore store = tempStore(tempFile());
-        MenuController controller = new MenuController(store);
-
         MenuItem item = newItem("Quadruple Haroldburger");
         controller.addItem(item);
 
         List<MenuItem> menu = controller.getMenu(
                 Optional.empty(), // vegetarian
                 Optional.empty(), // vegan
-                Optional.empty(), // includeAllergens
                 Optional.empty(), // excludeAllergens
                 Optional.empty(), // maxPrice
                 Optional.empty(), // maxCalories
@@ -84,9 +85,6 @@ public class TestMenuController {
 
     @Test
     void TestGetMenu() {
-        ItemStore store = tempStore(tempFile());
-        MenuController controller = new MenuController(store);
-
         MenuItem item1 = newItem("Quadruple Haroldburger");
         MenuItem item2 = newItem("Chicken Spice Wrap");
 
@@ -96,7 +94,6 @@ public class TestMenuController {
         List<MenuItem> menu = controller.getMenu(
                 Optional.empty(), // vegetarian
                 Optional.empty(), // vegan
-                Optional.empty(), // includeAllergens
                 Optional.empty(), // excludeAllergens
                 Optional.empty(), // maxPrice
                 Optional.empty(), // maxCalories
@@ -115,9 +112,6 @@ public class TestMenuController {
 
     @Test
     void TestGetMenuItem() {
-        ItemStore store = tempStore(tempFile());
-        MenuController controller = new MenuController(store);
-
         MenuItem item = newItem("Quadruple Haroldburger");
         controller.addItem(item);
 
@@ -134,14 +128,11 @@ public class TestMenuController {
 
     @Test
     void TestUpdateItem() {
-        ItemStore store = tempStore(tempFile());
-        MenuController controller = new MenuController(store);
-
         MenuItem item = newItem("Quadruple Haroldburger");
+        item.setAvailability(false);
         controller.addItem(item);
 
-        MenuItem updatedItem = newItem("Double Stack Sandwich");
-        controller.updateItem("Quadruple Haroldburger", updatedItem);
+        controller.updateItem("Quadruple Haroldburger", true);
 
         MenuItem testItem = controller.getMenuItem("Double Stack Sandwich");
 
@@ -154,9 +145,6 @@ public class TestMenuController {
 
     @Test
     void TestDeleteItem() {
-        ItemStore store = tempStore(tempFile());
-        MenuController controller = new MenuController(store);
-
         MenuItem item = newItem("Quadruple Haroldburger");
         controller.addItem(item);
 
@@ -165,7 +153,6 @@ public class TestMenuController {
         List<MenuItem> menu = controller.getMenu(
                 Optional.empty(), // vegetarian
                 Optional.empty(), // vegan
-                Optional.empty(), // includeAllergens
                 Optional.empty(), // excludeAllergens
                 Optional.empty(), // maxPrice
                 Optional.empty(), // maxCalories
@@ -181,9 +168,6 @@ public class TestMenuController {
 
     @Test
     void TestVegetarianFilter() {
-        ItemStore store = tempStore(tempFile());
-        MenuController controller = new MenuController(store);
-
         MenuItem item1 = newItem("Quadruple Haroldburger");
         item1.setVegetarian(true);
         MenuItem item2 = newItem("Chicken Spice Wrap");
@@ -196,7 +180,6 @@ public class TestMenuController {
         List<MenuItem> vegetarianMenu = controller.getMenu(
                 Optional.of(true), // vegetarian
                 Optional.empty(), // vegan
-                Optional.empty(), // includeAllergens
                 Optional.empty(), // excludeAllergens
                 Optional.empty(), // maxPrice
                 Optional.empty(), // maxCalories
@@ -211,9 +194,6 @@ public class TestMenuController {
 
     @Test
     void TestVeganFilter() {
-        ItemStore store = tempStore(tempFile());
-        MenuController controller = new MenuController(store);
-
         MenuItem item1 = newItem("Quadruple Haroldburger");
         item1.setVegan(true);
         MenuItem item2 = newItem("Chicken Spice Wrap");
@@ -225,7 +205,6 @@ public class TestMenuController {
         List<MenuItem> veganMenu = controller.getMenu(
                 Optional.empty(), // vegetarian
                 Optional.of(true), // vegan
-                Optional.empty(), // includeAllergens
                 Optional.empty(), // excludeAllergens
                 Optional.empty(), // maxPrice
                 Optional.empty(), // maxCalories
@@ -237,4 +216,174 @@ public class TestMenuController {
                 () -> assertEquals("Quadruple Haroldburger", veganMenu.getFirst().getName())
         );
     }
+
+    @Test
+    void TestExcludeAllergensFilter() {
+        ItemStore store = tempStore(tempFile());
+        MenuController controller = new MenuController(store);
+
+        MenuItem item1 = newItem("Peanut Satay Wrap");
+        item1.setAllergens(List.of("peanuts"));
+
+        MenuItem item2 = newItem("Plain Salad");
+        item2.setAllergens(List.of());
+
+        controller.addItem(item1);
+        controller.addItem(item2);
+
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(),      // vegetarian
+                Optional.empty(),      // vegan
+                Optional.of(List.of("peanuts")), // excludeAllergens
+                Optional.empty(),      // maxPrice
+                Optional.empty(),      // maxCalories
+                Optional.empty()       // availableOnly
+        );
+
+        assertAll(
+                () -> assertEquals(1, menu.size()),
+                () -> assertEquals("Plain Salad", menu.getFirst().getName())
+        );
+    }
+
+    @Test
+    void TestMaxPriceFilter() {
+        ItemStore store = tempStore(tempFile());
+        MenuController controller = new MenuController(store);
+
+        MenuItem cheap = newItem("Budget Burger");
+        cheap.setPrice(4.99);
+
+        MenuItem expensive = newItem("Luxury Lobster Roll");
+        expensive.setPrice(19.99);
+
+        controller.addItem(cheap);
+        controller.addItem(expensive);
+
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(),      // vegetarian
+                Optional.empty(),      // vegan
+                Optional.empty(),      // excludeAllergens
+                Optional.of(10.00),    // maxPrice
+                Optional.empty(),      // maxCalories
+                Optional.empty()       // availableOnly
+        );
+
+        assertAll(
+                () -> assertEquals(1, menu.size()),
+                () -> assertEquals("Budget Burger", menu.getFirst().getName())
+        );
+    }
+
+    @Test
+    void TestMaxCaloriesFilter() {
+        ItemStore store = tempStore(tempFile());
+        MenuController controller = new MenuController(store);
+
+        MenuItem lowCal = newItem("Light Salad");
+        lowCal.setCalories(250);
+
+        MenuItem highCal = newItem("Mega Melt Sandwich");
+        highCal.setCalories(1200);
+
+        controller.addItem(lowCal);
+        controller.addItem(highCal);
+
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(),      // vegetarian
+                Optional.empty(),      // vegan
+                Optional.empty(),      // excludeAllergens
+                Optional.empty(),      // maxPrice
+                Optional.of(1000),      // maxCalories
+                Optional.empty()       // availableOnly
+        );
+
+        assertAll(
+                () -> assertEquals(1, menu.size()),
+                () -> assertEquals("Light Salad", menu.getFirst().getName())
+        );
+    }
+
+    @Test
+    void TestAvailableOnlyFilter() {
+        ItemStore store = tempStore(tempFile());
+        MenuController controller = new MenuController(store);
+
+        MenuItem available = newItem("Daily Special");
+        available.setAvailability(true);
+
+        MenuItem unavailable = newItem("Seasonal Pie");
+        unavailable.setAvailability(false);
+
+        controller.addItem(available);
+        controller.addItem(unavailable);
+
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(),      // vegetarian
+                Optional.empty(),      // vegan
+                Optional.empty(),      // excludeAllergens
+                Optional.empty(),      // maxPrice
+                Optional.empty(),      // maxCalories
+                Optional.of(true)      // availableOnly
+        );
+
+        assertAll(
+                () -> assertEquals(1, menu.size()),
+                () -> assertEquals("Daily Special", menu.getFirst().getName())
+        );
+    }
+
+    @Test
+    void TestGetMenuItemNotFound() {
+        MenuItem item = controller.getMenuItem("Nonexistent Item");
+        assertNull(item);
+    }
+
+    @Test
+    void TestUpdateItem_NotFound() {
+        controller.updateItem("Nonexistent Item", true);
+        MenuItem result = controller.getMenuItem("Nonexistent Item");
+
+        assertNull(result, "Updating a nonexistent item should not create it");
+    }
+
+    @Test
+    void TestDeleteItem_NotFound() {
+        controller.deleteItem("Ghost Item");
+
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()
+        );
+
+        assertEquals(0, menu.size(),
+                "Deleting nonexistent item should not affect menu");
+    }
+
+    @Test
+    void TestMaxPriceFilter_BugRejectsAllItems() {
+        MenuItem cheap = newItem("Cheap Item");
+        cheap.setPrice(4.99);
+
+        controller.addItem(cheap);
+
+        List<MenuItem> menu = controller.getMenu(
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of(10.0),   // should allow item
+                Optional.empty(),
+                Optional.empty()
+        );
+
+        assertAll(
+                () -> assertEquals(0, menu.size(), "Bug: maxPrice filter rejects all items with price > 0")
+        );
+    }
+
+
 }

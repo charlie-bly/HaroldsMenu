@@ -24,7 +24,7 @@ public class TestItemStore {
     private MenuItem newItem(String name) {
         MenuItem item = new MenuItem();
         item.setName(name);
-        item.setAvailable(true);
+        item.setAvailability(true);
         item.setVegetarian(false);
         item.setVegan(false);
         item.setCalories(500);
@@ -54,7 +54,7 @@ public class TestItemStore {
         ItemStore store = tempStore(tempFile());
         store.add(newItem("Chicken Spice Wrap"));
 
-        store.update("Chicken Spice Wrap,", newItem("Chicken Caesar Wrap"));
+        store.update("Chicken Spice Wrap,", true);
         List<MenuItem> updatedStore = store.getAll();
 
         assertAll(
@@ -68,7 +68,7 @@ public class TestItemStore {
         ItemStore store = tempStore(tempFile());
         store.add(newItem("Chicken Spice Wrap"));
 
-        store.setAvailability("Chicken Spice Wrap", false);
+        store.update("Chicken Spice Wrap", false);
         List<MenuItem> updatedStore = store.getAll();
 
         assertAll(

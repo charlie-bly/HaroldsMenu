@@ -57,7 +57,7 @@
     "allergens": ["gluten", "dairy", "sesame"],
     "vegetarian": true,
     "vegan": false,
-    "calories": 530
+    "calories": 770
   },
   {
     "name": "The Original",
@@ -87,7 +87,7 @@
     "allergens": ["gluten", "sesame","dairy"],
     "vegetarian": false,
     "vegan": false,
-    "calories": 1020
+    "calories": 1220
   },
   {
     "name": "Italian Combo",
@@ -117,7 +117,7 @@
     "allergens": ["gluten", "dairy", "eggs", "sesame"],
     "vegetarian": false,
     "vegan": false,
-    "calories": 560
+    "calories": 850
   },
   {
     "name": "Classic Fries",
@@ -127,7 +127,7 @@
     "allergens": [],
     "vegetarian": true,
     "vegan": true,
-    "calories": 380
+    "calories": 450
   },
   {
     "name": "Cheesy Fries",

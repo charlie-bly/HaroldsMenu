@@ -59,7 +59,7 @@ public class MenuItem {
         this.price = price;
     }
 
-    public void setAvailable(boolean available) {
+    public void setAvailability(boolean available) {
         this.available = available;
     }
 
