@@ -43,12 +43,11 @@ public class MenuController {
         List<MenuItem> results = new ArrayList<>();
 
         for (MenuItem item : store.getAll()) {
-            log.debug("Checking item: {}", item);
             if (matches(item, filters)) {
-                log.debug("Item matches filters: {}", item);
+                log.debug("Item matches filters: {}", item.getName());
                 results.add(item);
             } else {
-                log.debug("Item does not match filters: {}", item);
+                log.debug("Item does not match filters: {}", item.getName());
             }
         }
 
@@ -60,11 +59,11 @@ public class MenuController {
     @GetMapping("/menu/{name}")
     @Tag(name = "User", description = "Actions accessible to all users")
     public MenuItem getMenuItem(@PathVariable String name) {
-        log.info("Received request for menu item with name: {}", name);
+        log.info("Received getMenuItem request for item: {}", name);
 
         for (MenuItem item : store.getAll()) {
             if (item.getName().equalsIgnoreCase(name)) {
-                log.debug("Found item: {}", item);
+                log.debug("Found item: {}", item.getName());
                 return item;
             }
         }
@@ -76,14 +75,14 @@ public class MenuController {
     @PostMapping("/admin/menu")
     @Tag(name = "Admin", description = "Actions accessible only to administrators")
     public MenuItem addItem(@RequestBody MenuItem item) {
-        log.info("Received request to add menu item: {}", item);
+        log.info("Received addItem request: {}", item.getName());
         return store.add(item);
     }
 
     @PutMapping("admin/menu/{name}/availability")
     @Tag(name = "Admin", description = "Actions accessible only to administrators")
     public void updateItem(@PathVariable String name, @RequestParam boolean available) {
-        log.info("Received request to set availability of '{}' to {}", name, available);
+        log.info("Received updateItem request: '{}' to {}", name, available);
         store.update(name, available);
         log.debug("Successfully updated availability");
     }
@@ -114,52 +113,52 @@ public class MenuController {
 
     private boolean matches(MenuItem item, Filters filters) {
         List<String> allergens = item.getAllergens();
-        log.info("Checking filter matches for item: {}", item);
+        log.info("Checking filter matches for item: {}", item.getName());
 
         if (filters.vegetarian.isPresent() && item.isVegetarian() != filters.vegetarian().get()) {
-            log.debug("Rejected by vegetarian filter (value: {}", item.isVegetarian());
+            log.debug("Rejected by vegetarian filter (value: {})", item.isVegetarian());
             return false;
         } else if (filters.vegetarian.isPresent()) {
             log.debug("Accepted by vegetarian filter (value: {})", item.isVegetarian());
         }
 
         if (filters.vegan.isPresent() && item.isVegan() != filters.vegan().get()) {
-            log.debug("Rejected by vegan filter (value: {}", item.isVegan());
+            log.debug("Rejected by vegan filter (value: {})", item.isVegan());
             return false;
         } else if (filters.vegan.isPresent()) {
             log.debug("Accepted by vegan filter (value: {})", item.isVegan());
         }
 
         if (filters.availableOnly.orElse(false) && !item.isAvailable()) {
-            log.debug("Rejected by availableOnly filter (value: {}", item.isAvailable());
+            log.debug("Rejected by availableOnly filter (value: {})", item.isAvailable());
             return false;
         } else if (filters.availableOnly.orElse(false)) {
             log.debug("Accepted by availableOnly filter (value: {})", item.isAvailable());
         }
 
         if (filters.maxPrice.isPresent() && item.getPrice() > filters.maxPrice.get()) {
-            log.debug("Rejected by maxPrice filter (value: {}", item.getPrice());
+            log.debug("Rejected by maxPrice filter (value: {})", item.getPrice());
             return false;
         } else if (filters.maxPrice.isPresent()) {
             log.debug("Accepted by maxPrice filter (value: {})", item.getPrice());
         }
 
         if (filters.maxCalories.isPresent() && item.getCalories() > 1000) {
-            log.debug("Rejected by maxCalories filter (value: {}", item.getCalories());
+            log.debug("Rejected by maxCalories filter (value: {}, limit: 1000)", item.getCalories());
             return false;
         } else if (filters.maxCalories.isPresent()) {
-            log.debug("Accepted by maxCalories filter (value: {})", item.getCalories());
+            log.debug("Accepted by maxCalories filter (value: {}, limit: 1000)", item.getCalories());
         }
         if (filters.excludeAllergens.isPresent() & allergens != null) {
             for (String allergen : filters.excludeAllergens().get()) {
                 if (item.getAllergens().contains(allergen)) {
-                    log.debug("Rejected by excludeAllergens filter (value: {})", allergens);
+                    log.debug("Rejected by excludeAllergens filter (value: {}, blocked: {})",
+                            allergens, filters.excludeAllergens.get());
                     return false;
                 }
             }
-        } else if (filters.excludeAllergens.isPresent()) {
-            log.debug("Accepted by excludeAllergens filter (value: {})",
-                    filters.excludeAllergens().get());
+            log.debug("Accepted by excludeAllergens filter (value: {}, blocked: {},)",
+                    allergens, filters.excludeAllergens().get());
         }
         return true;
     }
