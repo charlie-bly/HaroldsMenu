@@ -4,10 +4,14 @@ import com.example.haroldsmenu.models.MenuItem;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.nio.file.*;
 import java.util.List;
 
+@SpringBootTest
+@ActiveProfiles("test")
 public class TestItemStore {
 
     @TempDir
@@ -18,7 +22,8 @@ public class TestItemStore {
     }
 
     private ItemStore tempStore(Path file) {
-        return new ItemStore(file.toString());
+        //return new ItemStore(file.toString());
+        return new ItemStore();
     }
 
     private MenuItem newItem(String name) {

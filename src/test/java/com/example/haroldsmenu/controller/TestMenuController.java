@@ -8,6 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -15,7 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@WebMvcTest(MenuController.class)
 public class TestMenuController {
 
     private boolean addPassed = false;
@@ -32,7 +36,8 @@ public class TestMenuController {
     }
 
     private ItemStore tempStore(Path file) {
-        return new ItemStore(file.toString());
+        //return new ItemStore(file.toString());
+        return new ItemStore();
     }
 
     private MenuItem newItem(String name) {
@@ -45,7 +50,7 @@ public class TestMenuController {
     private ItemStore newMenu() {
         ItemStore store = tempStore(tempFile());
         store.add(newItem("Quadruple Haroldburger"));
-        store.add(newItem("Chicken Spice Wrap"));
+        store.add(newItem("Chicken vOB Wrap"));
         return store;
     }
 
