@@ -384,6 +384,4 @@ public class TestMenuController {
                 () -> assertEquals(0, menu.size(), "Bug: maxPrice filter rejects all items with price > 0")
         );
     }
-
-
 }

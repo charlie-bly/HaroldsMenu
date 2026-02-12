@@ -38,22 +38,29 @@ public class ItemStore {
         return item;
     }
 
-    public MenuItem update(String name, boolean available) {
+    public void update(String name, boolean available) {
         for (MenuItem item : items) {
             if (item.getName().equals(name)) {
                 item.setAvailability(available);
                 saveToFile();
-                return item;
             } else {
-                log.error("Item '{}' not found", name);
+                log.error("Item '{}' not found for updates", name);
             }
         }
-        return null;
     }
 
     public void delete(String name) {
+        for (MenuItem item : items) {
+            if (item.getName().equals(name)) {
+                items.remove(item);
+                saveToFile();
+            } else {
+                log.error("Item '{}' not found for deletion", name);
+            }
+        }
     }
 
+    // Only used for Tests
     public void deleteAll() {
         items.clear();
         saveToFile();
